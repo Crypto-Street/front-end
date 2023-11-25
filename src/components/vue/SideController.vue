@@ -1,26 +1,16 @@
 <template>
 	<div class="side" :class="[side, { 'is-hidden': hidden, 'dark-mode': darkMode }]">
 		<nav class="navbar" role="navigation" aria-label="navigation" :style="'justify-content:center'">
-			<div
-				class="coin-dropdown-button button is-medium"
-				@click="dropdownActive = !dropdownActive"
-				:class="{ 'is-primary': dropdownActive }"
-			>
-				<span
-					class="coin-logo"
-					:style="'background-color: ' + (darkMode ? 'transparent' : ' #' + coinConfig.color) + ';'"
-				>
-					<img
-						:src="
-							config.baseUrl +
-							'static/img/singles/coin_logos/' +
-							coinConfig.ticker.toLowerCase() +
-							'.png?v=' +
-							appVersion
-						"
-						width="48"
-						height="48"
-					/>
+			<div class="coin-dropdown-button button is-medium" @click="dropdownActive = !dropdownActive"
+				:class="{ 'is-primary': dropdownActive }">
+				<span class="coin-logo"
+					:style="'background-color: ' + (darkMode ? 'transparent' : ' #' + coinConfig.color) + ';'">
+					<img :src="config.baseUrl +
+						'static/img/singles/coin_logos/' +
+						coinConfig.ticker.toLowerCase() +
+						'.png?v=' +
+						appVersion
+						" width="48" height="48" />
 				</span>
 				<span>{{ coinConfig.coinName }}</span>
 				<span class="icon is-normal"><i class="fas fa-chevron-down"></i></span>
@@ -32,53 +22,32 @@
 					<div class="coin-dropdown-section section">
 						<div class="subtitle is-4 has-text-centered">Change Street</div>
 						<div class="columns is-multiline">
-							<div
-								v-for="(street, key) in game.streetController.enabledStreets"
-								:key="key"
-								class="column has-text-centered"
-							>
-								<div
-									class="button is-medium"
-									v-on:click="switchStreet(side, street)"
-									:class="{ 'is-primary': street.config.coinName == coinConfig.coinName }"
-								>
-									<span
-										class="coin-logo"
-										:style="
-											'background-color: ' +
-											(darkMode ? 'transparent' : ' #' + street.config.color) +
-											';'
-										"
-									>
-										<img
-											:src="
-												config.baseUrl +
-												'static/img/singles/coin_logos/' +
-												street.config.ticker.toLowerCase() +
-												'.png?v=' +
-												appVersion
-											"
-											width="48"
-											height="48"
-										/>
+							<div v-for="(street, key) in game.streetController.enabledStreets" :key="key"
+								class="column has-text-centered">
+								<div class="button is-medium relative" v-on:click="switchStreet(side, street)"
+									:class="{ 'is-primary': street.config.coinName == coinConfig.coinName }">
+									<span class="coin-logo"
+										:style="'background-color: ' + (darkMode ? 'transparent' : ' #' + street.config.color) + ';'">
+										<img :src="config.baseUrl +
+											'static/img/singles/coin_logos/' +
+											street.config.ticker.toLowerCase() +
+											'.png?v=' +
+											appVersion
+											" width="48" height="48" />
 									</span>
 									<span>{{ street.config.coinName }}</span>
+									<span
+										v-if="street.config.coinName !== 'Bitcoin' && street.config.coinName !== 'Ethereum'"
+										class="soon">Coming soon</span>
 								</div>
+
 							</div>
 						</div>
 						<div class="buttons has-addons is-centered">
-							<button
-								@click="switchStreet('full')"
-								:class="{ 'is-primary': side === 'full' }"
-								class="button"
-							>
+							<button @click="switchStreet('full')" :class="{ 'is-primary': side === 'full' }" class="button">
 								{{ $t("general.single-view") }}
 							</button>
-							<button
-								@click="switchStreet('left')"
-								:class="{ 'is-primary': side !== 'full' }"
-								class="button"
-							>
+							<button @click="switchStreet('left')" :class="{ 'is-primary': side !== 'full' }" class="button">
 								{{ $t("general.dual-view") }}
 							</button>
 						</div>
@@ -87,15 +56,11 @@
 						<div class="subtitle is-4 has-text-centered">Toggle Window</div>
 						<div class="columns is-multiline">
 							<div v-for="item in navigation" :key="item.key" class="column has-text-centered">
-								<div
-									class="button is-medium"
-									v-on:click="item.hasWindow ? toggleWindow(item.key) : {}"
-									:class="{ 'is-primary': activeWindows.includes(item.key) }"
-								>
+								<div class="button is-medium" v-on:click="item.hasWindow ? toggleWindow(item.key) : {}"
+									:class="{ 'is-primary': activeWindows.includes(item.key) }">
 									<span style="margin-right: 7px" v-html="item.html"></span>
 									<span
-										v-html="typeof item.tooltip === 'function' ? item.tooltip() : item.tooltip"
-									></span>
+										v-html="typeof item.tooltip === 'function' ? item.tooltip() : item.tooltip"></span>
 								</div>
 							</div>
 						</div>
@@ -103,15 +68,12 @@
 				</div>
 			</div>
 		</nav>
-		<div @click="toggleWindow('stats')" class="open-stats button is-large" :style="(side === 'right' ? 'right' : 'left') + ':-2px;'" v-if="!activeWindows.includes('stats') && !compactView"><span class='fas fa-chart-area'></span>&nbsp; Stats</div>
-		<Window
-			:ref="window"
-			:key="window"
-			:window-key="window"
-			:window-data="windowDataObj[window]"
-			v-on:toggleWindow="toggleWindow(window)"
-			v-for="window in activeWindows"
-		></Window>
+		<div @click="toggleWindow('stats')" class="open-stats button is-large"
+			:style="(side === 'right' ? 'right' : 'left') + ':-2px;'"
+			v-if="!activeWindows.includes('stats') && !compactView"><span class='fas fa-chart-area'></span>&nbsp; Stats
+		</div>
+		<Window :ref="window" :key="window" :window-key="window" :window-data="windowDataObj[window]"
+			v-on:toggleWindow="toggleWindow(window)" v-for="window in activeWindows"></Window>
 		<div class="floating-menu canvas-overlay">
 			<Following :followers-hashes="txFollowersHashes" ref="following"></Following>
 		</div>
@@ -286,7 +248,7 @@ export default Vue.extend({
 				this.stats["lastBlock"].value = recent;
 
 				let timeSinceLastBlock = Date.now() / 1000 - recentBlockTime;
-				if(this.coinConfig?.ignoreMissingRecent) return;
+				if (this.coinConfig?.ignoreMissingRecent) return;
 				if (this.stats["medianBlockTime"] && timeSinceLastBlock > this.stats["medianBlockTime"].value * (15 * (this.coinConfig?.missingRecentMultiplier || 1))) {
 					if (
 						this.missingRecentErrors[this.coinConfig.ticker] &&
@@ -618,9 +580,10 @@ export default Vue.extend({
 	}
 
 }
-.open-stats{
-		position: fixed;
-		bottom:-2px;
-		z-index: 3;
-	}
+
+.open-stats {
+	position: fixed;
+	bottom: -2px;
+	z-index: 3;
+}
 </style>
