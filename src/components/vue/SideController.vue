@@ -37,7 +37,7 @@
 									</span>
 									<span>{{ street.config.coinName }}</span>
 									<span
-										v-if="street.config.coinName !== 'Bitcoin' && street.config.coinName !== 'Ethereum'"
+										v-if="street.config.coinName !== 'Bitcoin' && street.config.coinName !== 'Ethereum' && street.config.coinName !== 'Bitcoin Cash'"
 										class="soon">Coming soon</span>
 								</div>
 
