@@ -11,14 +11,14 @@ export default class Sign extends Phaser.GameObjects.Container {
 		this.setDepth(this.scene.personDepth - 1);
 		this.y = this.scene.busStop - toRes(105);
 		this.signWidth = toRes(430);
-		this.adBanner = this.scene.ticker === "ETH" && process.env.VUE_APP_SIGN_ADS === "true" ? true : false;
+		this.adBanner = process.env.VUE_APP_SIGN_ADS === "true" ? true : false;
 		this.resetAd();
 		this.createSign();
 	}
 
 	resetAd() {
-		this.adText = "Your Ad Here in TxStreet!";
-		this.adLink = "https://hr0a9o292ak.typeform.com/to/LSZ3l4hz";
+		this.adText = this.scene.ticker === "ETH" ? "Your Ad Here in TxStreet!" : "Support us in Gitcoin!";
+		this.adLink = this.scene.ticker === "ETH" ? "https://hr0a9o292ak.typeform.com/to/LSZ3l4hz" : "https://explorer.gitcoin.co/#/round/424/0x98720dd1925d34a2453ebc1f91c9d48e7e89ec29/0x98720dd1925d34a2453ebc1f91c9d48e7e89ec29-303";
 		if (!this.adSprites) return;
 		for (let i = 0; i < this.adSprites.length; i++) {
 			const adSprite = this.adSprites[i];
@@ -184,11 +184,17 @@ export default class Sign extends Phaser.GameObjects.Container {
 			this.bannerInfo.setInteractive({ useHandCursor: true });
 			this.bannerInfo.on("pointerup", e => {
 				if (e.downElement.nodeName.toLowerCase() !== "canvas") return;
-				this.scene.vue.htmlWindow(
-					"ad-info",
-					"Your Ad Here",
-					`The community places ads here. You can too! <a href="https://hr0a9o292ak.typeform.com/to/LSZ3l4hz" target="_blank">Click here</a> for more information.`
-				);
+				this.scene.ticker === "ETH" ?
+					this.scene.vue.htmlWindow(
+						"ad-info",
+						"Your Ad Here",
+						`The community places ads here. You can too! <a href="https://hr0a9o292ak.typeform.com/to/LSZ3l4hz" target="_blank">Click here</a> for more information.`
+					) :
+					this.scene.vue.htmlWindow(
+						"Contribute",
+						"Contribute to Crypto Streets",
+						`Contribute to our city's growth on Gitcoin! <a href="https://explorer.gitcoin.co/#/round/424/0x98720dd1925d34a2453ebc1f91c9d48e7e89ec29/0x98720dd1925d34a2453ebc1f91c9d48e7e89ec29-303" target="_blank">Click here</a> for more information.`
+					)
 			});
 			this.add(this.bannerInfo);
 
