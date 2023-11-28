@@ -761,7 +761,8 @@ Person.prototype.board = function () {
 
 Person.prototype.setStill = function (randomDirection = false) {
 	if (this.animsEnabled) {
-		let frames = this.scene.anims.anims.entries["stand_" + this.getData("spriteNo")].frames;
+		let frames;
+		frames = this.scene.anims.anims.entries["stand_" + this.getData("spriteNo")].frames;
 		if (randomDirection) {
 			let rand = Math.ceil(Math.random() * 3) - 1;
 			+this.anims.play("stand_" + this.getData("spriteNo"), true);
